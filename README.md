@@ -44,14 +44,14 @@ Si en algún punto no recuerdas qué significa un término, busca hacia atrás l
 
 ---
 
-Abre el Codespace del curso igual que siempre. En `src/` vas a encontrar `main.cpp`, `reproductor.h` y `reproductor.cpp` con el catálogo y las cinco primeras opciones del menú ya funcionando. Compila y ejecuta con:
+Abre el Codespace del curso igual que siempre. Vas a encontrar `main.cpp`, `reproductor.h` y `reproductor.cpp` con el catálogo y las cinco primeras opciones del menú ya funcionando. Compila y ejecuta con:
 
 ```bash
-g++ src/main.cpp src/reproductor.cpp -o sonora
+g++ main.cpp reproductor.cpp -o sonora
 ./sonora
 ```
 
-Esta sesión agrega cinco opciones nuevas al menú, entre la opción 5 (`Interpretar una calificacion`) y la opción 11 (`Salir`). Las opciones 6 a 10 ya están en `src/main.cpp`, comentadas: cada sección de esta guía te dice cuándo descomentar la que le corresponde.
+Esta sesión agrega cinco opciones nuevas al menú, entre la opción 5 (`Interpretar una calificacion`) y la opción 11 (`Salir`). Las opciones 6 a 10 ya están en `main.cpp`, comentadas: cada sección de esta guía te dice cuándo descomentar la que le corresponde.
 
 ## 0. Repaso: cómo se conectan reproductor.h, reproductor.cpp y main.cpp
 
@@ -59,11 +59,11 @@ Ya tienes tres archivos trabajando juntos: `reproductor.h` **declara** qué func
 
 ![Cómo se conectan reproductor.h, reproductor.cpp y main.cpp, desde el código fuente hasta el ejecutable](img/relacion_h_cpp_main.svg)
 
-`g++ src/main.cpp src/reproductor.cpp -o sonora` en realidad hace dos cosas: primero compila cada `.cpp` por separado, generando un archivo intermedio por cada uno; después, una etapa que se llama el **enlazador** (*linker*) une esos dos archivos intermedios en un solo ejecutable. Ahí es donde vive un error que todavía no has visto: qué pasa cuando `main.cpp` llama una función que `reproductor.h` declara, pero que nadie llegó a escribir en `reproductor.cpp`.
+`g++ main.cpp reproductor.cpp -o sonora` en realidad hace dos cosas: primero compila cada `.cpp` por separado, generando un archivo intermedio por cada uno; después, una etapa que se llama el **enlazador** (*linker*) une esos dos archivos intermedios en un solo ejecutable. Ahí es donde vive un error que todavía no has visto: qué pasa cuando `main.cpp` llama una función que `reproductor.h` declara, pero que nadie llegó a escribir en `reproductor.cpp`.
 
 ### El patrón de función de prueba que vas a usar toda la guía
 
-`src/main.cpp` ya tiene toda la lógica del menú dentro de una función, `iniciar_sonora()`, y `main()` solo la llama:
+`main.cpp` ya tiene toda la lógica del menú dentro de una función, `iniciar_sonora()`, y `main()` solo la llama:
 
 ```cpp
 void iniciar_sonora() {
@@ -92,7 +92,7 @@ int main() {
 }
 ```
 
-El comando de compilación no cambia nunca: siempre `g++ src/main.cpp src/reproductor.cpp -o sonora`, siempre `./sonora`. Cuando termines la prueba, comenta de nuevo tu función y descomenta `iniciar_sonora();`, para volver al menú completo.
+El comando de compilación no cambia nunca: siempre `g++ main.cpp reproductor.cpp -o sonora`, siempre `./sonora`. Cuando termines la prueba, comenta de nuevo tu función y descomenta `iniciar_sonora();`, para volver al menú completo.
 
 ### Ejercicio: provocar y resolver un error del enlazador
 
@@ -118,7 +118,7 @@ int main() {
 }
 ```
 
-Compila con `g++ src/main.cpp src/reproductor.cpp -o sonora`. Vas a obtener un error parecido a este:
+Compila con `g++ main.cpp reproductor.cpp -o sonora`. Vas a obtener un error parecido a este:
 
 ```
 /usr/bin/ld: /tmp/xxxxxx.o: in function `prueba_bienvenida()':
@@ -256,7 +256,7 @@ Ese código no es C++ estándar. Un compilador distinto, como el de Visual Studi
 
 ### Ejercicios
 
-🔧 **Consejo de entorno:** compila con `g++ src/main.cpp src/reproductor.cpp -o sonora` y ejecuta con `./sonora`.
+🔧 **Consejo de entorno:** compila con `g++ main.cpp reproductor.cpp -o sonora` y ejecuta con `./sonora`.
 
 #### 🧩 Antes de programar
 
@@ -277,7 +277,7 @@ A-3, B-1, C-2. `reproducciones_semana[0]` es la primera posición (índice 0), `
 
 #### Básico
 
-Sigue el patrón de la sección 0: agrega esta función arriba de `iniciar_sonora()`, en `src/main.cpp`, y actívala comentando la llamada a `iniciar_sonora()`.
+Sigue el patrón de la sección 0: agrega esta función arriba de `iniciar_sonora()`, en `main.cpp`, y actívala comentando la llamada a `iniciar_sonora()`.
 
 Declara `int reproducciones_semana[7]`, inicialízalo con `{12000, 8500, 15300, 9800, 22000, 31000, 18500}`, y declara `std::string nombres_dias[7]` con los nombres de los siete días en el mismo orden. Imprime la posición 2 de cada arreglo por separado, sin usar ningún ciclo todavía.
 
@@ -293,7 +293,7 @@ int main() {
 }
 ```
 
-Compila con `g++ src/main.cpp src/reproductor.cpp -o sonora` y ejecuta con `./sonora`.
+Compila con `g++ main.cpp reproductor.cpp -o sonora` y ejecuta con `./sonora`.
 
 La salida esperada es:
 
@@ -428,7 +428,7 @@ Este `for` tiene tres partes, separadas por `;`, dentro de los paréntesis:
 
 ### Una limitación más de los arreglos: el for basado en rango no siempre funciona
 
-Además de la razón anterior, hay un motivo puramente práctico para usar el `for` clásico con `reproducciones_semana`: dentro de una función que recibe un arreglo estático como parámetro, el `for` basado en rango deja de funcionar, incluso si solo necesitaras el valor de cada posición, sin importarte el índice. Agrega esta función, comentada, arriba de `iniciar_sonora()` en `src/main.cpp`:
+Además de la razón anterior, hay un motivo puramente práctico para usar el `for` clásico con `reproducciones_semana`: dentro de una función que recibe un arreglo estático como parámetro, el `for` basado en rango deja de funcionar, incluso si solo necesitaras el valor de cada posición, sin importarte el índice. Agrega esta función, comentada, arriba de `iniciar_sonora()` en `main.cpp`:
 
 ```cpp
 // void mostrar_arreglo(int reproducciones_semana[7]) {
@@ -438,7 +438,7 @@ Además de la razón anterior, hay un motivo puramente práctico para usar el `f
 // }
 ```
 
-Descoméntala, llámala desde una función de prueba activada en lugar de `iniciar_sonora()`, y compila con `g++ src/main.cpp src/reproductor.cpp -o sonora`. Vas a ver algo parecido a esto:
+Descoméntala, llámala desde una función de prueba activada en lugar de `iniciar_sonora()`, y compila con `g++ main.cpp reproductor.cpp -o sonora`. Vas a ver algo parecido a esto:
 
 ```
 main.cpp: In function ‘void mostrar_arreglo(int*)’:
@@ -518,7 +518,7 @@ int main() {
 
 ### Ejercicios
 
-🔧 **Consejo de entorno:** compila con `g++ src/main.cpp src/reproductor.cpp -o sonora` y ejecuta con `./sonora`.
+🔧 **Consejo de entorno:** compila con `g++ main.cpp reproductor.cpp -o sonora` y ejecuta con `./sonora`.
 
 #### Inducción al error
 
@@ -536,7 +536,7 @@ Agrega esta función, comentada, arriba de `iniciar_sonora()`:
 // }
 ```
 
-Descoméntala, actívala en `main()` en lugar de `iniciar_sonora()`, y compila con `g++ src/main.cpp src/reproductor.cpp -o sonora`. El compilador muestra una advertencia (no un error) apuntando a la línea del `sizeof` dentro de la función, y aun así el programa compila y corre. La salida es:
+Descoméntala, actívala en `main()` en lugar de `iniciar_sonora()`, y compila con `g++ main.cpp reproductor.cpp -o sonora`. El compilador muestra una advertencia (no un error) apuntando a la línea del `sizeof` dentro de la función, y aun así el programa compila y corre. La salida es:
 
 ```
 En main: 28 bytes
@@ -582,7 +582,7 @@ void prueba_mostrar_semana() {
 }
 ```
 
-Compila con `g++ src/main.cpp src/reproductor.cpp -o sonora` y ejecuta con `./sonora`.
+Compila con `g++ main.cpp reproductor.cpp -o sonora` y ejecuta con `./sonora`.
 
 La salida esperada es:
 
@@ -638,7 +638,7 @@ Se imprime 4 veces, con `i` tomando los valores 3, 5, 7 y 9. En cuanto `i` llega
 
 #### Avanzado
 
-📂 `src/main.cpp`
+📂 `main.cpp`
 
 Con `mostrar_reproducciones_semana` ya implementada, agrega dentro de `main()`, antes del ciclo del menú, la declaración de los dos arreglos:
 
@@ -657,7 +657,7 @@ case 6:
     break;
 ```
 
-Compila con `g++ src/main.cpp src/reproductor.cpp -o sonora` y ejecuta con `./sonora`.
+Compila con `g++ main.cpp reproductor.cpp -o sonora` y ejecuta con `./sonora`.
 
 La salida esperada al elegir la opción 6 es la misma de esta sección.
 
@@ -751,7 +751,7 @@ Domingo: 15.7985%
 
 ### Ejercicios
 
-🔧 **Consejo de entorno:** compila con `g++ src/main.cpp src/reproductor.cpp -o sonora` y ejecuta con `./sonora`.
+🔧 **Consejo de entorno:** compila con `g++ main.cpp reproductor.cpp -o sonora` y ejecuta con `./sonora`.
 
 #### Inducción al error
 
@@ -799,7 +799,7 @@ D. for (int i = 0; i < 7; i++) {
 
 #### Básico
 
-📂 `src/reproductor.h` y `src/reproductor.cpp`
+📂 `reproductor.h` y `reproductor.cpp`
 
 Declara e implementa `calcular_porcentaje_diario` tal como se ve en esta sección. Como todavía no implementaste `sumar_reproducciones_semana` (la ves en la sección 4), usa temporalmente esta versión con el total escrito directamente, y reemplázala cuando llegues a esa sección:
 
@@ -812,7 +812,7 @@ void calcular_porcentaje_diario(int reproducciones_semana[7], double porcentajes
 }
 ```
 
-Prueba con el arreglo de esta sección y compara tu salida contra la de arriba. Compila con `g++ src/main.cpp src/reproductor.cpp -o sonora` y ejecuta con `./sonora`.
+Prueba con el arreglo de esta sección y compara tu salida contra la de arriba. Compila con `g++ main.cpp reproductor.cpp -o sonora` y ejecuta con `./sonora`.
 
 <details>
 <summary>🔓 Ver solución</summary>
@@ -857,7 +857,7 @@ void transformar_a_minutos(int segundos[7], double minutos[7]) {
 
 #### Avanzado
 
-📂 `src/main.cpp`
+📂 `main.cpp`
 
 Con `calcular_porcentaje_diario` ya implementada (con el total temporal o el real, según en qué sección vayas), descomenta el bloque de `case 7:`:
 
@@ -872,7 +872,7 @@ case 7: {
 }
 ```
 
-Compila con `g++ src/main.cpp src/reproductor.cpp -o sonora` y ejecuta con `./sonora`.
+Compila con `g++ main.cpp reproductor.cpp -o sonora` y ejecuta con `./sonora`.
 
 La salida esperada al elegir la opción 7 es la misma de esta sección.
 
@@ -963,11 +963,11 @@ Promedio: 16728.6
 
 ### Ejercicios
 
-🔧 **Consejo de entorno:** compila con `g++ src/main.cpp src/reproductor.cpp -o sonora` y ejecuta con `./sonora`.
+🔧 **Consejo de entorno:** compila con `g++ main.cpp reproductor.cpp -o sonora` y ejecuta con `./sonora`.
 
 #### Inducción al error
 
-Agrega esto arriba de `iniciar_sonora()`, actívalo en lugar de ella, y compila con `g++ src/main.cpp src/reproductor.cpp -o sonora`:
+Agrega esto arriba de `iniciar_sonora()`, actívalo en lugar de ella, y compila con `g++ main.cpp reproductor.cpp -o sonora`:
 
 ```cpp
 int sumar_con_error(int arreglo[7]) {
@@ -1016,7 +1016,7 @@ for (int dia = 0; dia < 3; dia++) {
 
 #### Básico
 
-📂 `src/reproductor.h` y `src/reproductor.cpp`
+📂 `reproductor.h` y `reproductor.cpp`
 
 Declara e implementa `sumar_reproducciones_semana` y `promedio_reproducciones_semana` tal como se ven en esta sección. Reemplaza también el total temporal (`117100`) de `calcular_porcentaje_diario` por una llamada real a `sumar_reproducciones_semana`.
 
@@ -1030,7 +1030,7 @@ void prueba_acumulacion() {
 }
 ```
 
-Compila con `g++ src/main.cpp src/reproductor.cpp -o sonora` y ejecuta con `./sonora`.
+Compila con `g++ main.cpp reproductor.cpp -o sonora` y ejecuta con `./sonora`.
 
 La salida esperada es la misma de esta sección.
 
@@ -1103,7 +1103,7 @@ int maximo_reproducciones_semana(int reproducciones_semana[7]) {
 
 #### Avanzado
 
-📂 `src/main.cpp`
+📂 `main.cpp`
 
 Con las dos funciones ya implementadas, descomenta el bloque de `case 8:`:
 
@@ -1114,7 +1114,7 @@ case 8:
     break;
 ```
 
-Compila con `g++ src/main.cpp src/reproductor.cpp -o sonora` y ejecuta con `./sonora`.
+Compila con `g++ main.cpp reproductor.cpp -o sonora` y ejecuta con `./sonora`.
 
 La salida esperada al elegir la opción 8 es la misma de esta sección.
 
@@ -1180,7 +1180,7 @@ Cuatro días superan 15000: Miércoles (15300), Viernes (22000), Sábado (31000)
 
 ### Ejercicios
 
-🔧 **Consejo de entorno:** compila con `g++ src/main.cpp src/reproductor.cpp -o sonora` y ejecuta con `./sonora`.
+🔧 **Consejo de entorno:** compila con `g++ main.cpp reproductor.cpp -o sonora` y ejecuta con `./sonora`.
 
 #### Inducción al error
 
@@ -1213,7 +1213,7 @@ Antes de escribir nada, predice qué retorna `contar_dias_pico(reproducciones_se
 
 #### Básico
 
-📂 `src/reproductor.h` y `src/reproductor.cpp`
+📂 `reproductor.h` y `reproductor.cpp`
 
 Declara e implementa `contar_dias_pico` tal como se ve en esta sección.
 
@@ -1226,7 +1226,7 @@ void prueba_conteo() {
 }
 ```
 
-Compila con `g++ src/main.cpp src/reproductor.cpp -o sonora` y ejecuta con `./sonora`.
+Compila con `g++ main.cpp reproductor.cpp -o sonora` y ejecuta con `./sonora`.
 
 La salida esperada es:
 
@@ -1275,7 +1275,7 @@ Retorna `0`. La condición es `reproducciones_semana[dia] > umbral`, estrictamen
 
 #### Avanzado
 
-📂 `src/main.cpp`
+📂 `main.cpp`
 
 Con `contar_dias_pico` ya implementada, descomenta el bloque de `case 9:`:
 
@@ -1289,7 +1289,7 @@ case 9: {
 }
 ```
 
-Compila con `g++ src/main.cpp src/reproductor.cpp -o sonora` y ejecuta con `./sonora`.
+Compila con `g++ main.cpp reproductor.cpp -o sonora` y ejecuta con `./sonora`.
 
 La salida esperada al elegir la opción 9 e ingresar `15000` es:
 
@@ -1411,7 +1411,7 @@ Fíjate en que el resultado del ciclo `for` cambia según la estructura que reco
 
 ### Ejercicios
 
-🔧 **Consejo de entorno:** compila con `g++ src/main.cpp src/reproductor.cpp -o sonora` y ejecuta con `./sonora`.
+🔧 **Consejo de entorno:** compila con `g++ main.cpp reproductor.cpp -o sonora` y ejecuta con `./sonora`.
 
 #### 🧩 Antes de programar
 
@@ -1440,7 +1440,7 @@ Reproduce, siguiendo el patrón de la sección 0, el intento con arreglo de tama
 
 #### Básico
 
-📂 `src/reproductor.h` y `src/reproductor.cpp`
+📂 `reproductor.h` y `reproductor.cpp`
 
 Declara e implementa `filtrar_dias_pico` tal como se ve en esta sección.
 
@@ -1459,7 +1459,7 @@ void prueba_filtrado() {
 }
 ```
 
-Compila con `g++ src/main.cpp src/reproductor.cpp -o sonora` y ejecuta con `./sonora`.
+Compila con `g++ main.cpp reproductor.cpp -o sonora` y ejecuta con `./sonora`.
 
 La salida esperada es la misma de esta sección.
 
@@ -1517,7 +1517,7 @@ std::vector<int> filtrar_reproducciones_bajas(int reproducciones_semana[7], int 
 
 #### Avanzado
 
-📂 `src/main.cpp`
+📂 `main.cpp`
 
 Con `filtrar_dias_pico` ya implementada, descomenta el bloque de `case 10:`:
 
@@ -1534,7 +1534,7 @@ case 10: {
 }
 ```
 
-Compila con `g++ src/main.cpp src/reproductor.cpp -o sonora` y ejecuta con `./sonora`.
+Compila con `g++ main.cpp reproductor.cpp -o sonora` y ejecuta con `./sonora`.
 
 La salida esperada al elegir la opción 10 e ingresar `15000` es:
 
@@ -1627,7 +1627,7 @@ Ahí, `continue` salta a la siguiente vuelta del `while` del menú sin llegar al
 
 ### Ejercicios
 
-🔧 **Consejo de entorno:** compila con `g++ src/main.cpp src/reproductor.cpp -o sonora` y ejecuta con `./sonora`.
+🔧 **Consejo de entorno:** compila con `g++ main.cpp reproductor.cpp -o sonora` y ejecuta con `./sonora`.
 
 #### Inducción al error
 
@@ -1680,7 +1680,7 @@ Después de la vuelta 3, la condición `umbral <= 0` se revisa una vez más con 
 
 #### Básico
 
-📂 `src/main.cpp`
+📂 `main.cpp`
 
 Antes de `case 9:`, agrega la validación de esta sección para que el umbral solo se acepte si es mayor que cero:
 
@@ -1699,7 +1699,7 @@ case 9: {
 }
 ```
 
-Compila con `g++ src/main.cpp src/reproductor.cpp -o sonora` y ejecuta con `./sonora`. Elige la opción 9 e ingresa `-5`, luego `0`, luego `15000`.
+Compila con `g++ main.cpp reproductor.cpp -o sonora` y ejecuta con `./sonora`. Elige la opción 9 e ingresa `-5`, luego `0`, luego `15000`.
 
 La salida esperada es:
 
@@ -1737,11 +1737,11 @@ Se imprime 3 veces, con `contador` tomando los valores 0, 2 y 4 antes de cada im
 
 #### Avanzado
 
-📂 `src/main.cpp`
+📂 `main.cpp`
 
 Aplica la misma validación de esta sección a `case 10:`, para que el umbral de `filtrar_dias_pico` también rechace valores menores o iguales a cero.
 
-Compila con `g++ src/main.cpp src/reproductor.cpp -o sonora` y ejecuta con `./sonora`.
+Compila con `g++ main.cpp reproductor.cpp -o sonora` y ejecuta con `./sonora`.
 
 <details>
 <summary>🔓 Ver solución</summary>
@@ -1784,7 +1784,7 @@ Con los ejercicios de las secciones 2 a 7, ya descomentaste `case 6` a `case 10`
 
 ### Ejercicios
 
-🔧 **Consejo de entorno:** compila con `g++ src/main.cpp src/reproductor.cpp -o sonora` y ejecuta con `./sonora`.
+🔧 **Consejo de entorno:** compila con `g++ main.cpp reproductor.cpp -o sonora` y ejecuta con `./sonora`.
 
 #### Inducción al error
 
@@ -1806,12 +1806,12 @@ El programa compila y corre sin ningún error, porque `case 11` y `case 12` son 
 
 #### Básico
 
-📂 `src/main.cpp`
+📂 `main.cpp`
 
 Con los cinco bloques descomentados en las secciones 2 a 6, y la validación de la sección 7 en los `case 9` y `case 10`, ejecuta el programa completo y recorre las opciones 1, 6, 7, 8, 9 y 10 en orden, ingresando `15000` cuando el programa pida un umbral, y termina con la opción 11.
 
 ```bash
-g++ src/main.cpp src/reproductor.cpp -o sonora
+g++ main.cpp reproductor.cpp -o sonora
 ./sonora
 ```
 
@@ -1882,11 +1882,11 @@ Elige una opcion: Hasta pronto.
 
 #### Intermedio
 
-📂 `src/main.cpp`
+📂 `main.cpp`
 
 Agrega una opción `12. Mostrar el dia con mas reproducciones` que use `maximo_reproducciones_semana` (la función del Reto de la sección 4) para encontrar el valor más alto del arreglo, y `nombres_dias` para mostrar a qué día corresponde. Ajusta el texto del menú, el número de `case 11: Salir`, que ahora debería pasar a `13`, y el `default`.
 
-Compila con `g++ src/main.cpp src/reproductor.cpp -o sonora` y ejecuta con `./sonora`.
+Compila con `g++ main.cpp reproductor.cpp -o sonora` y ejecuta con `./sonora`.
 
 <details>
 <summary>🔓 Ver solución</summary>
@@ -1910,13 +1910,13 @@ Con el catálogo de ejemplo, esta opción imprime `Sabado: 31000`. El `break` in
 
 #### Avanzado
 
-📂 `src/main.cpp`
+📂 `main.cpp`
 
 Agrega una validación para toda opción del menú, no solo para los umbrales: si el usuario ingresa un número fuera de 1 a 13, o texto en lugar de un número, el programa debe mostrar `"Opcion invalida."` sin cerrarse. El `default` del `switch` ya cubre los números fuera de rango; la parte nueva es qué pasa si `std::cin >> opcion` falla porque el usuario escribió texto.
 
 > Retoma el patrón con `std::cin.fail()`, `std::cin.clear()` e `std::cin.ignore(...)` que quedó pendiente desde antes, y que ya aplicaste a los umbrales en la sección 7 de esta guía.
 
-Compila con `g++ src/main.cpp src/reproductor.cpp -o sonora` y ejecuta con `./sonora`.
+Compila con `g++ main.cpp reproductor.cpp -o sonora` y ejecuta con `./sonora`.
 
 <details>
 <summary>🔓 Ver solución</summary>
